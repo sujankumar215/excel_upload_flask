@@ -5,11 +5,12 @@ import re
 import jwt
 import json
 from  functools import wraps
+from config.config import dbconfig
 class auth_model():
     def __init__(self):
         ##connection establishment code
         try:
-            self.conn= mysql.connector.connect(host='localhost',username='sujan',password='harika123',database='groc_store',port=3306)
+            self.conn= mysql.connector.connect(host=dbconfig['hostname'],username=dbconfig['username'],password=dbconfig['password'],database=dbconfig['database'],port=dbconfig['port'])
             self.conn.autocommit=True
             self.cur = self.conn.cursor(dictionary=True)
             print("Connection successful!!!")
@@ -17,10 +18,12 @@ class auth_model():
             print("Some error")
 
     
-    def token_auth(self,endpoint):
+    def token_auth(self,endpoint=""):
         def inner1(func):
             @wraps(func)
             def inner2(*args):
+                endpoint =request.url_rule
+                print(endpoint)
                 autherization = request.headers.get("Authorization")
                 if re.match("^Bearer *([^ ]+) *$",autherization,flags=0):
                     token= split_auth=autherization.split(" ")[1]

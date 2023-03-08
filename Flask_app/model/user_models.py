@@ -3,11 +3,12 @@ import mysql.connector
 from flask import make_response
 from  datetime import datetime, timedelta
 import jwt
+from config.config import dbconfig
 class user_model():
     def __init__(self):
         ##connection establishment code
         try:
-            self.conn= mysql.connector.connect(host='localhost',username='sujan',password='harika123',database='groc_store',port=3306)
+            self.conn= mysql.connector.connect(host=dbconfig['hostname'],username=dbconfig['username'],password=dbconfig['password'],database=dbconfig['database'],port=dbconfig['port'])
             self.conn.autocommit=True
             self.cur = self.conn.cursor(dictionary=True)
             print("Connection successful!!!")
