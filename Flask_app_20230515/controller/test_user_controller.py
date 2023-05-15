@@ -110,5 +110,52 @@ class UserControllerTestCase(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+
+import unittest
+from unittest.mock import MagicMock, patch
+from app import app
+from model.user_models import user_model
+from model.auth_model import auth_model
+from flask import Flask, request
+
+class UserControllerTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.user = user_model()
+        self.auth = auth_model()
+
+    def test_user_getall_controller_with_valid_token(self):
+        # Mock the request headers and endpoint
+        headers = {'Authorization': 'Bearer JWT_TOKEN'}
+        endpoint = '/user/getall'
+        with patch('model.auth_model.request', headers=headers, url_rule=endpoint):
+            # Mock the token decoding to return a valid role ID
+            with patch('model.auth_model.jwt.decode') as mock_jwt_decode:
+                mock_jwt_decode.return_value = {'payload': {'role_id': 1}}
+                # Mock the database query result for the endpoint roles
+                with patch('model.auth_model.auth_model.cur.fetchall') as mock_fetchall:
+                    mock_fetchall.return_value = [{'roles': '[1, 2, 3]'}]
+                    # Call the method under test
+                    response = self.app.get('/user/getall')
+                    # Assertions
+                    self.assertEqual(response.status_code, 200)
+                    # Perform additional assertions as needed
+
+    def test_user_getall_controller_with_invalid_token(self):
+        # Mock the request headers and endpoint with an invalid token
+        headers = {'Authorization': 'Bearer INVALID_TOKEN'}
+        endpoint = '/user/getall'
+        with patch('model.auth_model.request', headers=headers, url_rule=endpoint):
+            # Call the method under test
+            response = self.app.get('/user/getall')
+            # Assertions
+            self.assertEqual(response.status_code, 401)
+            # Perform additional assertions as needed
+
+    # Write additional test cases as needed
+
+if __name__ == '__main__':
+    unittest.main()
+
     
 
