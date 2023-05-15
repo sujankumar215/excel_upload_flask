@@ -4,6 +4,8 @@ from flask import make_response
 from  datetime import datetime, timedelta
 import jwt
 from config.config import dbconfig
+from pandas import DataFrame
+
 class user_model():
     
     def DB_connection():
@@ -15,19 +17,43 @@ class user_model():
         cur.close()
         conn.close()
         
-    def user_getall_model(self):
+    def user_getall_model(self,schema,table):
         conn,cur= self.DB_connection()
-        cur.execute("select * from flask_tutorial.user_details")
+        query = """select * from {}.{}""".format(schema,table)
+        cur.execute(query)
         result= cur.fetchall()
         self.DB_close(conn,cur)
         if len(result)>0:
             res= make_response({'message':result},200)
             res.headers['Access-Control-Allow-Origin']='*'
+            cols = [description[0] for description in cur.description]
+            df = DataFrame(result,columns=cols)
             return res
             #return json.dumps(result)
         else:
             return make_response({'message':"No Records found"},204)
+    def user_truncate(self,schema,table):
+        try:
+            conn,cur= self.DB_connection()
+            query = """truncate table {}.{}""".format(schema,table)
+            cur.execute(query)
         
+            return "Truncate table"
+            #return json.dumps(result)
+        except:
+            return "Table not truncted"
+    
+    def Insert_query(self,schema,table,startnum,endnum):
+        conn,cur= self.DB_connection()
+        query = """select * from {}.{}""".format(schema,table)
+        cur.execute(query)
+        names= [description[0] for description in cur.description]
+        Columns= ','.join(names[startnum:endnum])
+        s_string=','.join(['%s']*len(names[startnum:endnum]))
+        query = """INSERT INTO {}.{}({})VALUES({})""".format(schema,table,Columns,s_string)
+        self.DB_close(conn,cur)
+        return query
+           
     def user_addone_model(self,data):
       conn,cur= self.DB_connection()
       cur.execute(f"insert into flask_tutorial.user_details(name,email,phone,role,password) values ('{data['name']}','{data['email']}','{data['phone']}','{data['role']}','{data['password']}')")
