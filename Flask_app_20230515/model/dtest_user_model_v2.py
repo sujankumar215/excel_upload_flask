@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from flask import make_response
 import jwt
 from pandas import DataFrame
-from user_model import user_model
+from model.user_models import user_model
 
 class UserModelTestCase(unittest.TestCase):
     

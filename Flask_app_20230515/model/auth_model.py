@@ -7,15 +7,14 @@ import json
 from  functools import wraps
 from config.config import dbconfig
 class auth_model():
-    def __init__(self):
-        ##connection establishment code
-        try:
-            self.conn= mysql.connector.connect(host=dbconfig['hostname'],username=dbconfig['username'],password=dbconfig['password'],database=dbconfig['database'],port=dbconfig['port'])
-            self.conn.autocommit=True
-            self.cur = self.conn.cursor(dictionary=True)
-            print("Connection successful!!!")
-        except:
-            print("Some error")
+    def DB_connection():
+        conn= mysql.connector.connect(host=dbconfig['hostname'],username=dbconfig['username'],password=dbconfig['password'],database=dbconfig['database'],port=dbconfig['port'])
+        conn.autocommit=True
+        cur = conn.cursor(dictionary=True)
+        return conn,cur
+    def DB_close(conn,cur):
+        cur.close()
+        conn.close()
 
     
     def token_auth(self,endpoint=""):
@@ -32,10 +31,12 @@ class auth_model():
                     except jwt.ExpiredSignatureError:
                         return make_response({"ERROR":"TOKEN_EXPIRED"},401)
                     role_id=jwt_decoded['payload']['role_id']
+                    conn,cur= self.DB_connection()
                     self.cur.execute(f"select roles from flask_tutorial.accesibility_view where endpoint='{endpoint}' ")
                     result = self.cur.fetchall()
                     if len(result)>0:
                         allowed_roles= json.loads(result[0]['roles'])
+                        self.DB_close(conn,cur)
                         if role_id in allowed_roles:
                             return func(*args)
                         else:
