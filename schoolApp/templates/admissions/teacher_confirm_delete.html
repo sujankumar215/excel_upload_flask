@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>
+            Delete form
+        </title>
+
+    </head>
+        <body >
+            <form method="post">
+                Are you sure to Delete this Teacher ?<br/>
+
+                <button type="submit" value = "confirm">Confirm</button>
+                {% csrf_token %}
+            </form>
+            
+        <a href="/adm/teacherlist">      <button type="button" value = "Cancel">Cancel</button> </a>
+        
+
+        </body>
+</html>

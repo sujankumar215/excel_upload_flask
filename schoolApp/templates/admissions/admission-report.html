@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>
+            This is admissions report
+        </title>
+        <body  bgcolor="yellow">
+            <h1>
+                Admissions report
+            </h1>
+            <br/>
+        <table>
+            <tr>
+                <th> Student name</th>
+                <th> Father name</th>
+                <th> Class name</th>
+                <th> Contact</th>
+                <th>Actions</th>
+            </tr>
+            {% for s in allstudents %}
+            <tr>
+                <td> {{s.name}} </td>
+                <td> {{s.fathername}} </td>
+                <td> {{s.classname}} </td>
+                <td> {{s.contact}} </td>
+                <td>
+                    <a href="/adm/delete/{{s.id}}">Delete</a> &nbsp;&nbsp;&nbsp;
+                
+                    <a href="/adm/update/{{s.id}}">Update</a>
+
+                </td>
+            <br/>
+            
+            {% endfor %}
+            </tr>
+        </table>
+        </body>
+</html>

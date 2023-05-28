@@ -1,0 +1,25 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>
+            This is add Teacher page
+        </title>
+        <link rel="stylesheet" href="{% static "css/style.css" %}"/>
+        <body >
+            <h1 >
+               Please fill the form             
+            </h1>
+            <img src="{% static "images/logo-03.png" %}" width="100" height="100" alt="Image Not Found">
+            
+            <form method = "POST">
+                <table>
+                {{form.as_table }}
+                </table>
+                <br/>
+                <input type="submit" value = "Add Teacher">
+                {% csrf_token %}
+            </form>
+
+        </body>
+</html>

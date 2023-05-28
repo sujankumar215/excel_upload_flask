@@ -1,0 +1,25 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>
+            This is add Vendor page
+        </title>
+        <link rel="stylesheet" href="{% static "css/style.css" %}"/>
+        <body >
+            <h1 >
+               Please fill the form             
+            </h1>
+            <img src="{% static "images/logo-03.png" %}" width="40" height="40" alt="Image Not Found">
+            
+            <form method = "POST">
+                <table>
+                {{Form.as_table}}
+                </table>
+                <br/>
+                <input type="submit" value = "Add vendor">
+                {% csrf_token %}
+            </form>
+
+        </body>
+</html>

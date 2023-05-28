@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>
+            This is Teacher report
+        </title>
+        <body  bgcolor="yellow">
+            <h1>
+                Teacher report
+            </h1>
+            <br/>
+        <table>
+            
+            <tr>
+                <th> ID</th>
+                <th> Teacher name</th>
+                <th> Experiance </th>
+                <th> Subject name</th>
+                <th> Contact</th>
+                <th>Actions</th>
+            </tr>
+           
+            {% for s in teacher_list %}
+            <tr>
+                <td><a href="/adm/getteacherdetail/{{s.id}}">{{s.id}} </a></td> 
+                <td> {{s.name}} </td>
+                <td> {{s.exp}} </td>
+                <td> {{s.subject}} </td>
+                <td> {{s.contact}} </td>
+                <td>
+                    <a href="/adm/deleteteacher/{{s.id}}">Delete</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                    <a href="/adm/updateteacher/{{s.id}}">Update</a>
+
+                </td>
+            <br/>            
+            {% endfor %}
+            </tr>
+           
+        </table>
+        </body>
+</html>
